@@ -10,15 +10,14 @@ jobs:
         with:
           persist-credentials: false
       - run: cargo build --release --locked --features rusb/vendored
-      - run: tar czf g203ctl-macos-arm64.tar.gz -C target/release g203ctl
       - uses: actions/upload-artifact@v7
         with:
-          name: g203ctl-macos-arm64
-          path: g203ctl-macos-arm64.tar.gz
+          path: target/release/g203ctl
+          archive: false
       - if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
         run: >
-          gh release create "$TAG" g203ctl-macos-arm64.tar.gz --generate-notes
-          || gh release upload "$TAG" g203ctl-macos-arm64.tar.gz --clobber
+          gh release create "$TAG" target/release/g203ctl --generate-notes
+          || gh release upload "$TAG" target/release/g203ctl --clobber
