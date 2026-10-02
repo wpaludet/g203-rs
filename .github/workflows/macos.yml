@@ -1,15 +1,24 @@
 name: macos-build
 on: [push, workflow_dispatch]
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: macos-latest   # Apple Silicon, Rust preinstalled
     steps:
       - uses: actions/checkout@v7
-      - run: rustup target add x86_64-apple-darwin
-      - run: >
-          cargo build --release --locked --features rusb/vendored
-          --target aarch64-apple-darwin --target x86_64-apple-darwin
+        with:
+          persist-credentials: false
+      - run: cargo build --release --locked --features rusb/vendored
+      - run: tar czf g203ctl-macos-arm64.tar.gz -C target/release g203ctl
       - uses: actions/upload-artifact@v7
         with:
-          name: g203_rs-macos
-          path: target/*-apple-darwin/release/g203ctl
+          name: g203ctl-macos-arm64
+          path: g203ctl-macos-arm64.tar.gz
+      - if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: >
+          gh release create "$TAG" g203ctl-macos-arm64.tar.gz --generate-notes
+          || gh release upload "$TAG" g203ctl-macos-arm64.tar.gz --clobber
