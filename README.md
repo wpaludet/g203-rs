@@ -1,20 +1,24 @@
 # g203-rs
 
 ![](https://i.imgur.com/s5IKtVe.jpeg)
-[Watch it in action.](https://streamable.com/e/jd1erd)
 
 <br>
 
 This is a command-line interface and library for controlling the Logitech G203 Lightsync mouse. It is built in Rust and uses the `g203_lib` library for device control and the `clap` crate for command-line argument parsing.
 
-Only tested in MacBook Pro M5 Max 2026 (Tahoe 26.6).
+Fork only tested in MacBook Pro M5 Max 2026 (Tahoe 26.6) for
+
+"kUSBVendorString" = "Logitech"
+"USB Product Name" = "G203 LIGHTSYNC Gaming Mouse"
+"idVendor" = 0x46d
+"idProduct" = 0xc092
 
 ## Installation
 
 You need `libusb` installed.
 
 ```sh
-git clone https://github.com/carlos-menezes/g203-rs.git
+git clone ...
 cd g203ctl
 cargo build --release
 ```
