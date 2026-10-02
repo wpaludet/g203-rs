@@ -7,7 +7,7 @@
 
 This is a command-line interface and library for controlling the Logitech G203 Lightsync mouse. It is built in Rust and uses the `g203_lib` library for device control and the `clap` crate for command-line argument parsing.
 
-Only tested in MacBook Pro M1 2020 (Sonoma 14).
+Only tested in MacBook Pro M5 Max 2026 (Tahoe 26.6).
 
 ## Installation
 
