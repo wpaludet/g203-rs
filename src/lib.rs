@@ -25,7 +25,10 @@ impl Controller {
         let handle = rusb::open_device_with_vid_pid(VENDOR_ID, PRODUCT_ID);
         match handle {
             Some(handle) => {
-                handle.set_active_configuration(CONFIGURATION_ID)?;
+                // macOS: the single configuration is already active, leave it alone
+                if !cfg!(target_os = "macos") {
+                    handle.set_active_configuration(CONFIGURATION_ID)?;
+                }
                 Ok(Self {
                     inner: handle,
                     timeout,
@@ -201,6 +204,11 @@ impl Controller {
     // It detaches the kernel driver from the interface and claims the interface for the program.
     // This is necessary to ensure that the program has exclusive access to the device.
     fn command_prologue(&self) -> rusb::Result<()> {
+        // macOS refuses to detach the HID driver (Access, even as root);
+        // control transfers on endpoint 0 don't need the interface claimed
+        if cfg!(target_os = "macos") {
+            return Ok(());
+        }
         // Detach the kernel driver from the interface.
         // This allows the program to have exclusive access to the device.
         self.inner.detach_kernel_driver(INTERFACE_ID)?;
@@ -214,6 +222,11 @@ impl Controller {
     // It releases the interface and reattaches the kernel driver.
     // This is necessary to allow other programs to access the device.
     fn command_epilogue(&self) -> rusb::Result<()> {
+        // macOS refuses to detach the HID driver (Access, even as root);
+        // control transfers on endpoint 0 don't need the interface claimed
+        if cfg!(target_os = "macos") {
+            return Ok(());
+        }
         // Release the interface.
         // This tells the operating system that the program is no longer in control of the device.
         self.inner.release_interface(INTERFACE_ID)?;
