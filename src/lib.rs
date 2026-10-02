@@ -5,7 +5,7 @@ use rusb::{DeviceHandle, GlobalContext};
 const INTERFACE_ID: u8 = 0x01;
 const CONFIGURATION_ID: u8 = 0;
 const VENDOR_ID: u16 = 0x046D;
-const PRODUCT_ID: u16 = 0xC09D;
+const PRODUCT_ID: u16 = 0xC092;
 
 // Direction enum to represent the direction of the wave effect
 #[derive(Clone)]
