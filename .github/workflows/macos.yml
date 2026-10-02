@@ -4,12 +4,12 @@ jobs:
   build:
     runs-on: macos-latest   # Apple Silicon, Rust preinstalled
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: rustup target add x86_64-apple-darwin
       - run: >
           cargo build --release --locked --features rusb/vendored
           --target aarch64-apple-darwin --target x86_64-apple-darwin
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: g203_rs-macos
-          path: target/*-apple-darwin/release/g203_rs
+          path: target/*-apple-darwin/release/g203ctl
